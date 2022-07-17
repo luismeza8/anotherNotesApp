@@ -45,10 +45,11 @@ class TaskCard extends StatelessWidget {
 }
 
 class ToDoWidget extends StatelessWidget {
-  String? title;
-  bool isDone;
+  final String? title;
+  final bool isDone;
 
-  ToDoWidget({Key? key, this.title, required this.isDone}) : super(key: key);
+  const ToDoWidget({Key? key, this.title, required this.isDone})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

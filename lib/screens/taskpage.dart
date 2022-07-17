@@ -27,13 +27,14 @@ class TaskPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const Expanded(
+                      Expanded(
                         child: TextField(
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: 'Enter Task Title',
                             border: InputBorder.none,
                           ),
-                          style: TextStyle(
+                          onSubmitted: (value) {},
+                          style: const TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF211551),
@@ -53,20 +54,20 @@ class TaskPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                ToDoWidget(
+                const ToDoWidget(
                   title: 'First task',
                   isDone: true,
                 ),
-                ToDoWidget(
+                const ToDoWidget(
                   isDone: false,
                 ),
-                ToDoWidget(
+                const ToDoWidget(
                   isDone: true,
                 ),
-                ToDoWidget(
+                const ToDoWidget(
                   isDone: false,
                 ),
-                ToDoWidget(
+                const ToDoWidget(
                   isDone: false,
                 ),
               ],
