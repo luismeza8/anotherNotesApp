@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/database_helper.dart';
+import 'package:todo_app/models/task.dart';
 import 'package:todo_app/widgets.dart';
 
 class TaskPage extends StatelessWidget {
@@ -27,13 +29,23 @@ class TaskPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const Expanded(
+                      Expanded(
                         child: TextField(
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: 'Enter Task Title',
                             border: InputBorder.none,
                           ),
-                          style: TextStyle(
+                          onSubmitted: (value) async {
+                            if (value.isNotEmpty) {
+                              DatabaseHelper _dbHelper = DatabaseHelper();
+
+                              Task _newTask = Task(title: value);
+
+                              _dbHelper.insertStask(_newTask);
+                              print('Good job');
+                            }
+                          },
+                          style: const TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF211551),
@@ -53,20 +65,20 @@ class TaskPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                ToDoWidget(
+                const ToDoWidget(
                   title: 'First task',
                   isDone: true,
                 ),
-                ToDoWidget(
+                const ToDoWidget(
                   isDone: false,
                 ),
-                ToDoWidget(
+                const ToDoWidget(
                   isDone: true,
                 ),
-                ToDoWidget(
+                const ToDoWidget(
                   isDone: false,
                 ),
-                ToDoWidget(
+                const ToDoWidget(
                   isDone: false,
                 ),
               ],

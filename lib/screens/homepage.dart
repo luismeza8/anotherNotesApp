@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/database_helper.dart';
+import 'package:todo_app/models/task.dart';
 import 'package:todo_app/screens/taskpage.dart';
 import 'package:todo_app/widgets.dart';
 
@@ -10,6 +12,8 @@ class HomepageScreen extends StatefulWidget {
 }
 
 class _HomepageScreenState extends State<HomepageScreen> {
+  final DatabaseHelper _dbHelper = DatabaseHelper();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,19 +33,22 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         image: AssetImage('assets/images/logo.png')),
                   ),
                   Expanded(
-                    child: ListView(
-                      children: const [
-                        TaskCard(
-                          title: 'Get Started!',
-                          description:
-                              'Hello User, Welcome to Yes, Another ToDo App',
-                        ),
-                        TaskCard(),
-                        TaskCard(),
-                        TaskCard(),
-                        TaskCard(),
-                        TaskCard(),
-                      ],
+                    child: FutureBuilder<List>(
+                      future: _dbHelper.getTasks(),
+                      builder: (context, snapshot) {
+                        if (snapshot.data == null) {
+                          return Container();
+                        } else {
+                          return ListView.builder(
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (context, index) {
+                              return TaskCard(
+                                title: snapshot.data![index].title,
+                              );
+                            },
+                          );
+                        }
+                      },
                     ),
                   )
                 ],
