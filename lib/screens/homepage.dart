@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:todo_app/database_helper.dart';
-import 'package:todo_app/models/task.dart';
 import 'package:todo_app/screens/taskpage.dart';
 import 'package:todo_app/widgets.dart';
 
@@ -17,21 +17,40 @@ class _HomepageScreenState extends State<HomepageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Your ToDo App',
+          style: TextStyle(
+            color: (Colors.black),
+          ),
+        ),
+        backgroundColor: Colors.white,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.grey,
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const TaskPage(),
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          color: const Color(0xFFF6F6F6),
+          padding: const EdgeInsets.only(
+            left: 24,
+            right: 24,
+          ),
+          color: Colors.white,
           width: double.infinity,
           child: Stack(
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.only(bottom: 32, top: 32),
-                    child: const Image(
-                        image: AssetImage('assets/images/logo.png')),
-                  ),
                   Expanded(
                     child: FutureBuilder<List>(
                       future: _dbHelper.getTasks(),
@@ -53,34 +72,6 @@ class _HomepageScreenState extends State<HomepageScreen> {
                   )
                 ],
               ),
-              Positioned(
-                bottom: 24.0,
-                right: 0.0,
-                child: GestureDetector(
-                  onTap: (() => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const TaskPage()))),
-                  child: Container(
-                    height: 60,
-                    width: 60,
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xFF7349FE),
-                          Color(0xFF643FDB),
-                        ],
-                        begin: Alignment(0, -1),
-                        end: Alignment(0, 1),
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Image(
-                      image: AssetImage('assets/images/add_icon.png'),
-                    ),
-                  ),
-                ),
-              )
             ],
           ),
         ),

@@ -9,6 +9,11 @@ class TaskPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {},
+        label: Text('Delete Task'),
+        icon: Icon(Icons.delete),
+      ),
       body: SafeArea(
         child: Stack(
           children: [
@@ -42,7 +47,6 @@ class TaskPage extends StatelessWidget {
                               Task _newTask = Task(title: value);
 
                               _dbHelper.insertStask(_newTask);
-                              print('Good job');
                             }
                           },
                           style: const TextStyle(
@@ -83,25 +87,25 @@ class TaskPage extends StatelessWidget {
                 ),
               ],
             ),
-            Positioned(
-              bottom: 24.0,
-              right: 24.0,
-              child: GestureDetector(
-                onTap: (() => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const TaskPage()))),
-                child: Container(
-                  height: 60,
-                  width: 60,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFE3577),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Image(
-                    image: AssetImage('assets/images/delete_icon.png'),
-                  ),
-                ),
-              ),
-            )
+            // Positioned(
+            //   bottom: 24.0,
+            //   right: 24.0,
+            //   child: GestureDetector(
+            //     onTap: (() => Navigator.push(context,
+            //         MaterialPageRoute(builder: (context) => const TaskPage()))),
+            //     child: Container(
+            //       height: 60,
+            //       width: 60,
+            //       decoration: BoxDecoration(
+            //         color: const Color(0xFFFE3577),
+            //         borderRadius: BorderRadius.circular(20),
+            //       ),
+            //       child: const Image(
+            //         image: AssetImage('assets/images/delete_icon.png'),
+            //       ),
+            //     ),
+            //   ),
+            // )
           ],
         ),
       ),
