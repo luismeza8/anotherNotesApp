@@ -8,39 +8,44 @@ class TaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
-      margin: const EdgeInsets.only(top: 20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+    return ListTile(
+      title: Text(
+        title ?? 'Unnamed Note',
+        style: const TextStyle(fontWeight: FontWeight.bold),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: Text(
-              title ?? 'Unnamed Task',
-              style: const TextStyle(
-                fontSize: 22,
-                color: Color(0xFF211551),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Text(
-            description ?? 'No Description Added',
-            style: const TextStyle(
-              fontSize: 16,
-              color: Color(0xFF86829D),
-              height: 1.5,
-            ),
-          ),
-        ],
-      ),
+      subtitle: Text(description ?? ''),
+      onTap: () {},
     );
+    // Container(
+    //   width: double.infinity,
+    //   padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+    //   margin: const EdgeInsets.only(top: 20),
+    //   decoration: BoxDecoration(
+    //     borderRadius: BorderRadius.circular(20),
+    //   ),
+    //   child: Column(
+    //     crossAxisAlignment: CrossAxisAlignment.start,
+    //     children: [
+    //       Padding(
+    //         padding: const EdgeInsets.only(bottom: 10),
+    //         child: Text(
+    //           title ?? 'Unnamed Task',
+    //           style: const TextStyle(
+    //             fontSize: 22,
+    //             fontWeight: FontWeight.bold,
+    //           ),
+    //         ),
+    //       ),
+    //       Text(
+    //         description ?? 'No Description Added',
+    //         style: const TextStyle(
+    //           fontSize: 16,
+    //           height: 1.5,
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 }
 
@@ -64,7 +69,6 @@ class ToDoWidget extends StatelessWidget {
               border: isDone
                   ? null
                   : Border.all(
-                      color: const Color(0xFF86829D),
                       width: 1.5,
                     ),
             ),
@@ -79,7 +83,6 @@ class ToDoWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: isDone ? FontWeight.bold : FontWeight.w500,
-              color: isDone ? const Color(0xFF211551) : const Color(0xFF86829D),
             ),
           ),
         ],

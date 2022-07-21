@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:todo_app/database_helper.dart';
 import 'package:todo_app/screens/taskpage.dart';
 import 'package:todo_app/widgets.dart';
@@ -18,19 +17,17 @@ class _HomepageScreenState extends State<HomepageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 72,
         title: const Text(
-          'Your ToDo App',
+          'Your Notes App',
           style: TextStyle(
-            color: (Colors.black),
+            fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.white,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.grey,
-        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
+      floatingActionButton: FloatingActionButton.extended(
+        label: const Text('Add Note'),
+        icon: const Icon(Icons.add),
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(
@@ -39,12 +36,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
         ),
       ),
       body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.only(
-            left: 24,
-            right: 24,
-          ),
-          color: Colors.white,
+        child: SizedBox(
           width: double.infinity,
           child: Stack(
             children: [
