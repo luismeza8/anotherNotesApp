@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/database_helper.dart';
 import 'package:todo_app/models/task.dart';
-import 'package:todo_app/widgets.dart';
+
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 
 class TaskPage extends StatefulWidget {
   final Task? task;
@@ -22,6 +23,7 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     String? noteDescription;
     String? noteTitle;
+    quill.QuillController _controller = quill.QuillController.basic();
 
     return Scaffold(
       appBar: AppBar(
@@ -57,35 +59,39 @@ class _TaskPageState extends State<TaskPage> {
         label: const Text('Save Note'),
         icon: const Icon(Icons.save),
       ),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: TextFormField(
-                    scrollController: ScrollController(),
-                    decoration: const InputDecoration(
-                      hintText: 'Add a Description for the Task...',
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 24),
-                    ),
-                    initialValue: widget.task != null
-                        ? widget.task!.description ?? ''
-                        : '',
-                    onChanged: (value) async {
-                      if (value.isNotEmpty) {
-                        noteDescription = value;
-                      }
-                    },
-                  ),
-                ),
-              ],
+      body: Column(
+        children: [
+          quill.QuillToolbar.basic(
+            controller: _controller,
+            multiRowsDisplay: false,
+            toolbarIconSize: 24,
+          ),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: quill.QuillEditor.basic(
+                controller: _controller,
+                readOnly: false,
+              ),
             ),
-          ],
-        ),
+          )
+
+          // TextFormField(
+          //   scrollController: ScrollController(),
+          //   decoration: const InputDecoration(
+          //     hintText: 'Add a Description for the Task...',
+          //     border: InputBorder.none,
+          //     contentPadding: EdgeInsets.symmetric(horizontal: 24),
+          //   ),
+          //   initialValue:
+          //       widget.task != null ? widget.task!.description ?? '' : '',
+          //   onChanged: (value) async {
+          //     if (value.isNotEmpty) {
+          //       noteDescription = value;
+          //     }
+          //   },
+          // ),
+        ],
       ),
     );
   }
