@@ -1,51 +1,25 @@
 import 'package:flutter/material.dart';
 
-class TaskCard extends StatelessWidget {
+class TaskCard extends StatefulWidget {
   final String? title;
   final String? description;
 
   const TaskCard({Key? key, this.title, this.description}) : super(key: key);
 
   @override
+  State<TaskCard> createState() => _TaskCardState();
+}
+
+class _TaskCardState extends State<TaskCard> {
+  @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
-        title ?? 'Unnamed Note',
+        widget.title ?? 'Unnamed Note',
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
-      subtitle: Text(description ?? ''),
-      onTap: () {},
+      subtitle: Text(widget.description ?? ''),
     );
-    // Container(
-    //   width: double.infinity,
-    //   padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
-    //   margin: const EdgeInsets.only(top: 20),
-    //   decoration: BoxDecoration(
-    //     borderRadius: BorderRadius.circular(20),
-    //   ),
-    //   child: Column(
-    //     crossAxisAlignment: CrossAxisAlignment.start,
-    //     children: [
-    //       Padding(
-    //         padding: const EdgeInsets.only(bottom: 10),
-    //         child: Text(
-    //           title ?? 'Unnamed Task',
-    //           style: const TextStyle(
-    //             fontSize: 22,
-    //             fontWeight: FontWeight.bold,
-    //           ),
-    //         ),
-    //       ),
-    //       Text(
-    //         description ?? 'No Description Added',
-    //         style: const TextStyle(
-    //           fontSize: 16,
-    //           height: 1.5,
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 }
 

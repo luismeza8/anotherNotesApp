@@ -33,6 +33,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
           MaterialPageRoute(
             builder: (context) => const TaskPage(),
           ),
+        ).then(
+          (value) => setState(() {}),
         ),
       ),
       body: SafeArea(
@@ -53,8 +55,22 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           return ListView.builder(
                             itemCount: snapshot.data!.length,
                             itemBuilder: (context, index) {
-                              return TaskCard(
-                                title: snapshot.data![index].title,
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => TaskPage(
+                                        task: snapshot.data![index],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: TaskCard(
+                                  title: snapshot.data![index].title,
+                                  description:
+                                      snapshot.data![index].description,
+                                ),
                               );
                             },
                           );

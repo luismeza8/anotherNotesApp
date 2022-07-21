@@ -3,26 +3,40 @@ import 'package:todo_app/database_helper.dart';
 import 'package:todo_app/models/task.dart';
 import 'package:todo_app/widgets.dart';
 
-class TaskPage extends StatelessWidget {
-  const TaskPage({Key? key}) : super(key: key);
+class TaskPage extends StatefulWidget {
+  final Task? task;
+
+  const TaskPage({Key? key, this.task}) : super(key: key);
+
+  @override
+  State<TaskPage> createState() => _TaskPageState();
+}
+
+class _TaskPageState extends State<TaskPage> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    String? noteDescription;
+    String? noteTitle;
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 72,
-        title: TextField(
+        title: TextFormField(
           decoration: const InputDecoration(
             hintText: 'Enter Task Title',
             border: InputBorder.none,
           ),
-          onSubmitted: (value) async {
+          controller: widget.task != null
+              ? TextEditingController(text: widget.task!.title ?? '')
+              : TextEditingController(text: ''),
+          onChanged: (value) async {
             if (value.isNotEmpty) {
-              DatabaseHelper _dbHelper = DatabaseHelper();
-
-              Task _newTask = Task(title: value);
-
-              _dbHelper.insertStask(_newTask);
+              noteTitle = value;
             }
           },
           style: const TextStyle(
@@ -33,15 +47,12 @@ class TaskPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          (value) async {
-            if (value.isNotEmpty) {
-              DatabaseHelper _dbHelper = DatabaseHelper();
+          DatabaseHelper _dbHelper = DatabaseHelper();
 
-              Task _newTask = Task(title: value);
+          Task _newTask = Task(title: noteTitle, description: noteDescription);
 
-              _dbHelper.insertStask(_newTask);
-            }
-          };
+          _dbHelper.insertStask(_newTask);
+          Navigator.pop(context);
         },
         label: const Text('Save Note'),
         icon: const Icon(Icons.save),
@@ -53,33 +64,23 @@ class TaskPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: TextField(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: TextFormField(
+                    scrollController: ScrollController(),
                     decoration: const InputDecoration(
                       hintText: 'Add a Description for the Task...',
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(horizontal: 24),
                     ),
-                    onSubmitted: (value) async {
-                      if (value.isNotEmpty) {}
+                    initialValue: widget.task != null
+                        ? widget.task!.description ?? ''
+                        : '',
+                    onChanged: (value) async {
+                      if (value.isNotEmpty) {
+                        noteDescription = value;
+                      }
                     },
                   ),
-                ),
-                const ToDoWidget(
-                  title: 'First task',
-                  isDone: true,
-                ),
-                const ToDoWidget(
-                  isDone: false,
-                ),
-                const ToDoWidget(
-                  isDone: true,
-                ),
-                const ToDoWidget(
-                  isDone: false,
-                ),
-                const ToDoWidget(
-                  isDone: false,
                 ),
               ],
             ),
