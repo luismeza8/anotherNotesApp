@@ -24,9 +24,38 @@ class _TaskPageState extends State<TaskPage> {
     String? noteDescription;
     String? noteTitle;
     quill.QuillController _controller = quill.QuillController.basic();
+    List<String> items = ['Delete note'];
 
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (context) {
+              return items.map(
+                (choice) {
+                  return PopupMenuItem(
+                    onTap: () {
+                      DatabaseHelper _dbHelper = DatabaseHelper();
+                      _dbHelper.deleteNote(widget.task!);
+
+                      Navigator.pop(context);
+                    },
+                    child: Row(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(right: 8.0),
+                          child: Icon(Icons.delete),
+                        ),
+                        Text(choice)
+                      ],
+                    ),
+                    value: choice,
+                  );
+                },
+              ).toList();
+            },
+          ),
+        ],
         toolbarHeight: 72,
         title: TextFormField(
           decoration: const InputDecoration(
@@ -50,9 +79,7 @@ class _TaskPageState extends State<TaskPage> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           DatabaseHelper _dbHelper = DatabaseHelper();
-
           Task _newTask = Task(title: noteTitle, description: noteDescription);
-
           _dbHelper.insertStask(_newTask);
           Navigator.pop(context);
         },
@@ -75,22 +102,6 @@ class _TaskPageState extends State<TaskPage> {
               ),
             ),
           )
-
-          // TextFormField(
-          //   scrollController: ScrollController(),
-          //   decoration: const InputDecoration(
-          //     hintText: 'Add a Description for the Task...',
-          //     border: InputBorder.none,
-          //     contentPadding: EdgeInsets.symmetric(horizontal: 24),
-          //   ),
-          //   initialValue:
-          //       widget.task != null ? widget.task!.description ?? '' : '',
-          //   onChanged: (value) async {
-          //     if (value.isNotEmpty) {
-          //       noteDescription = value;
-          //     }
-          //   },
-          // ),
         ],
       ),
     );

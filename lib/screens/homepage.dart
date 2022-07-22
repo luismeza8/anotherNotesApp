@@ -37,53 +37,36 @@ class _HomepageScreenState extends State<HomepageScreen> {
           (value) => setState(() {}),
         ),
       ),
-      body: SafeArea(
-        child: SizedBox(
-          width: double.infinity,
-          child: Stack(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: FutureBuilder<List>(
-                      future: _dbHelper.getTasks(),
-                      builder: (context, snapshot) {
-                        if (snapshot.data == null) {
-                          return Container();
-                        } else {
-                          return ListView.builder(
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => TaskPage(
-                                        task: snapshot.data![index],
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: TaskCard(
-                                  note: snapshot.data![index],
-                                  // title: snapshot.data![index].title,
-                                  // description:
-                                  //     snapshot.data![index].description,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: FutureBuilder<List>(
+              future: _dbHelper.getTasks(),
+              builder: (context, snapshot) {
+                return snapshot.data == null
+                    ? Container()
+                    : ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      TaskPage(task: snapshot.data![index]),
                                 ),
-                              );
+                              ).then((value) => setState(() {}));
                             },
+                            child: TaskCard(note: snapshot.data![index]),
                           );
-                        }
-                      },
-                    ),
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
+                        },
+                      );
+              },
+            ),
+          )
+        ],
       ),
     );
   }
