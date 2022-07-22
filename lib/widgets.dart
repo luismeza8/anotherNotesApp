@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/database_helper.dart';
+import 'package:todo_app/models/task.dart';
 
 class TaskCard extends StatefulWidget {
-  final String? title;
-  final String? description;
+  // final String? title;
+  // final String? description;
+  final Task note;
 
-  const TaskCard({Key? key, this.title, this.description}) : super(key: key);
+  const TaskCard({Key? key, required this.note}) : super(key: key);
 
   @override
   State<TaskCard> createState() => _TaskCardState();
@@ -15,10 +18,18 @@ class _TaskCardState extends State<TaskCard> {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
-        widget.title ?? 'Unnamed Note',
+        widget.note.title ?? 'Unnamed Note',
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
-      subtitle: Text(widget.description ?? ''),
+      isThreeLine: true,
+      subtitle: Text(widget.note.description ?? ''),
+      trailing: IconButton(
+        icon: const Icon(Icons.delete),
+        onPressed: (() {
+          DatabaseHelper _dbHelper = DatabaseHelper();
+          _dbHelper.deleteNote(widget.note);
+        }),
+      ),
     );
   }
 }

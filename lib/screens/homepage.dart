@@ -67,9 +67,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                   );
                                 },
                                 child: TaskCard(
-                                  title: snapshot.data![index].title,
-                                  description:
-                                      snapshot.data![index].description,
+                                  note: snapshot.data![index],
+                                  // title: snapshot.data![index].title,
+                                  // description:
+                                  //     snapshot.data![index].description,
                                 ),
                               );
                             },
