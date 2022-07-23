@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:todo_app/database_helper.dart';
 import 'package:todo_app/screens/taskpage.dart';
-import 'package:todo_app/widgets.dart';
+import 'package:todo_app/widgets/noteCard.widget.dart';
 
 import '../models/task.dart';
 

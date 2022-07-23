@@ -114,9 +114,16 @@ class _TaskPageState extends State<TaskPage> {
           Expanded(
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: quill.QuillEditor.basic(
+              child: quill.QuillEditor(
                 controller: controller,
+                scrollController: ScrollController(),
+                scrollable: true,
+                focusNode: FocusNode(),
+                autoFocus: false,
                 readOnly: false,
+                placeholder: 'Add your note here.',
+                expands: false,
+                padding: EdgeInsets.zero,
               ),
             ),
           )
