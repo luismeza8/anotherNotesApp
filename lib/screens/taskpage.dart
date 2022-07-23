@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:todo_app/database_helper.dart';
 import 'package:todo_app/models/task.dart';
 
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 
+// ignore: must_be_immutable
 class TaskPage extends StatefulWidget {
   final Task? task;
 
@@ -21,9 +24,20 @@ class _TaskPageState extends State<TaskPage> {
 
   @override
   Widget build(BuildContext context) {
+    quill.QuillController? controller;
+
+    if (widget.task?.description != null) {
+      controller = quill.QuillController(
+        document:
+            quill.Document.fromJson(jsonDecode(widget.task!.description!)),
+        selection: const TextSelection.collapsed(offset: 0),
+      );
+    } else {
+      controller = quill.QuillController.basic();
+    }
+
     String? noteDescription;
     String? noteTitle;
-    quill.QuillController _controller = quill.QuillController.basic();
     List<String> items = ['Delete note'];
 
     return Scaffold(
@@ -79,9 +93,13 @@ class _TaskPageState extends State<TaskPage> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           DatabaseHelper _dbHelper = DatabaseHelper();
-          Task _newTask = Task(title: noteTitle, description: noteDescription);
+
+          noteDescription = jsonEncode(controller!.document.toDelta().toJson());
+
+          Task _newTask = Task(title: noteTitle, description: noteDescription!);
           _dbHelper.insertStask(_newTask);
-          Navigator.pop(context);
+
+          Navigator.pop(context, noteDescription);
         },
         label: const Text('Save Note'),
         icon: const Icon(Icons.save),
@@ -89,7 +107,7 @@ class _TaskPageState extends State<TaskPage> {
       body: Column(
         children: [
           quill.QuillToolbar.basic(
-            controller: _controller,
+            controller: controller,
             multiRowsDisplay: false,
             toolbarIconSize: 24,
           ),
@@ -97,7 +115,7 @@ class _TaskPageState extends State<TaskPage> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: quill.QuillEditor.basic(
-                controller: _controller,
+                controller: controller,
                 readOnly: false,
               ),
             ),

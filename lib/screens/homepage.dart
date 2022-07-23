@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:todo_app/database_helper.dart';
 import 'package:todo_app/screens/taskpage.dart';
 import 'package:todo_app/widgets.dart';
+
+import '../models/task.dart';
 
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({Key? key}) : super(key: key);
@@ -12,6 +17,7 @@ class HomepageScreen extends StatefulWidget {
 
 class _HomepageScreenState extends State<HomepageScreen> {
   final DatabaseHelper _dbHelper = DatabaseHelper();
+  QuillController controller = QuillController.basic();
 
   @override
   Widget build(BuildContext context) {
@@ -50,16 +56,11 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
                           return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      TaskPage(task: snapshot.data![index]),
-                                ),
-                              ).then((value) => setState(() {}));
-                            },
-                            child: TaskCard(note: snapshot.data![index]),
+                            onTap: () => goToNote(snapshot.data![index]),
+                            child: TaskCard(
+                              note: snapshot.data![index],
+                              controller: controller,
+                            ),
                           );
                         },
                       );
@@ -69,5 +70,24 @@ class _HomepageScreenState extends State<HomepageScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> goToNote(Task note) async {
+    String? content = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TaskPage(task: note),
+      ),
+    );
+
+    if (content != null && content != 'Delete note') {
+      setState(() {
+        controller = QuillController(
+            document: Document.fromJson(jsonDecode(content)),
+            selection: const TextSelection.collapsed(offset: 0));
+      });
+    } else {
+      setState(() {});
+    }
   }
 }
