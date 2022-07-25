@@ -5,14 +5,11 @@ import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:todo_app/models/task.dart';
 
 class TaskCard extends StatefulWidget {
-  final Task note;
+  final Notes note;
   final QuillController controller;
 
-  const TaskCard({
-    Key? key,
-    required this.note,
-    required this.controller,
-  }) : super(key: key);
+  const TaskCard({Key? key, required this.note, required this.controller})
+      : super(key: key);
 
   @override
   State<TaskCard> createState() => _TaskCardState();

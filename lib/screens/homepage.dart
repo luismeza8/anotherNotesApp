@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:todo_app/database_helper.dart';
-import 'package:todo_app/screens/taskpage.dart';
+import 'package:todo_app/screens/note_page.screen.dart';
 import 'package:todo_app/widgets/noteCard.widget.dart';
 
 import '../models/task.dart';
@@ -48,7 +48,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
         children: [
           Expanded(
             child: FutureBuilder<List>(
-              future: _dbHelper.getTasks(),
+              future: _dbHelper.getNotes(),
               builder: (context, snapshot) {
                 return snapshot.data == null
                     ? Container()
@@ -72,11 +72,11 @@ class _HomepageScreenState extends State<HomepageScreen> {
     );
   }
 
-  Future<void> goToNote(Task note) async {
+  Future<void> goToNote(Notes note) async {
     String? content = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => TaskPage(task: note),
+        builder: (context) => TaskPage(note: note),
       ),
     );
 

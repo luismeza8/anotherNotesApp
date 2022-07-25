@@ -5,41 +5,41 @@ import 'package:todo_app/models/task.dart';
 class DatabaseHelper {
   Future<Database> database() async {
     return openDatabase(
-      join(await getDatabasesPath(), 'todo.db'),
+      join(await getDatabasesPath(), 'notes.db'),
       onCreate: (db, version) {
         return db.execute(
-          "CREATE TABLE tasks(id INTEGER PRIMARY KEY, title TEXT, description TEXT)",
+          "CREATE TABLE notes(id INTEGER PRIMARY KEY, title TEXT, description TEXT)",
         );
       },
       version: 1,
     );
   }
 
-  Future<void> insertStask(Task task) async {
+  Future<void> insertNote(Notes notes) async {
     Database _db = await database();
     await _db.insert(
-      'tasks',
-      task.toMap(),
+      'notes',
+      notes.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
-  Future<void> deleteNote(Task task) async {
+  Future<void> deleteNote(Notes note) async {
     Database _db = await database();
-    await _db.rawDelete('DELETE FROM tasks WHERE id = ${task.id}');
+    await _db.rawDelete('DELETE FROM notes WHERE id = ${note.id}');
   }
 
-  Future<List<Task>> getTasks() async {
+  Future<List<Notes>> getNotes() async {
     Database _db = await database();
-    List<Map<String, dynamic>> taskMap = await _db.query('tasks');
+    List<Map<String, dynamic>> noteMap = await _db.query('notes');
 
     return List.generate(
-      taskMap.length,
+      noteMap.length,
       (index) {
-        return Task(
-          id: taskMap[index]['id'],
-          title: taskMap[index]['title'],
-          description: taskMap[index]['description'],
+        return Notes(
+          id: noteMap[index]['id'],
+          title: noteMap[index]['title'],
+          description: noteMap[index]['description'],
         );
       },
     );

@@ -8,9 +8,9 @@ import 'package:flutter_quill/flutter_quill.dart' as quill;
 
 // ignore: must_be_immutable
 class TaskPage extends StatefulWidget {
-  final Task? task;
+  final Notes? note;
 
-  const TaskPage({Key? key, this.task}) : super(key: key);
+  const TaskPage({Key? key, this.note}) : super(key: key);
 
   @override
   State<TaskPage> createState() => _TaskPageState();
@@ -26,10 +26,11 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     quill.QuillController? controller;
 
-    if (widget.task?.description != null) {
+    if (widget.note?.description != null) {
       controller = quill.QuillController(
-        document:
-            quill.Document.fromJson(jsonDecode(widget.task!.description!)),
+        document: quill.Document.fromJson(
+          jsonDecode(widget.note!.description!),
+        ),
         selection: const TextSelection.collapsed(offset: 0),
       );
     } else {
@@ -38,22 +39,19 @@ class _TaskPageState extends State<TaskPage> {
 
     String? noteDescription;
     String? noteTitle;
-    List<String> items = ['Delete note'];
+    List<String> popUpMenuItems = ['Delete note'];
 
     return Scaffold(
       appBar: AppBar(
+        leading:
+            IconButton(onPressed: () {}, icon: const Icon(Icons.arrow_back)),
         actions: [
           PopupMenuButton(
             itemBuilder: (context) {
-              return items.map(
+              return popUpMenuItems.map(
                 (choice) {
                   return PopupMenuItem(
-                    onTap: () {
-                      DatabaseHelper _dbHelper = DatabaseHelper();
-                      _dbHelper.deleteNote(widget.task!);
-
-                      Navigator.pop(context);
-                    },
+                    onTap: () => deleteNote(),
                     child: Row(
                       children: [
                         const Padding(
@@ -73,16 +71,14 @@ class _TaskPageState extends State<TaskPage> {
         toolbarHeight: 72,
         title: TextFormField(
           decoration: const InputDecoration(
-            hintText: 'Enter Task Title',
+            hintText: 'Enter Note Title',
             border: InputBorder.none,
           ),
-          controller: widget.task != null
-              ? TextEditingController(text: widget.task!.title ?? '')
+          controller: widget.note != null
+              ? TextEditingController(text: widget.note!.title ?? '')
               : TextEditingController(text: ''),
           onChanged: (value) async {
-            if (value.isNotEmpty) {
-              noteTitle = value;
-            }
+            if (value.isNotEmpty) noteTitle = value;
           },
           style: const TextStyle(
             fontSize: 26,
@@ -93,11 +89,10 @@ class _TaskPageState extends State<TaskPage> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           DatabaseHelper _dbHelper = DatabaseHelper();
-
           noteDescription = jsonEncode(controller!.document.toDelta().toJson());
-
-          Task _newTask = Task(title: noteTitle, description: noteDescription!);
-          _dbHelper.insertStask(_newTask);
+          Notes _newTask =
+              Notes(title: noteTitle, description: noteDescription!);
+          _dbHelper.insertNote(_newTask);
 
           Navigator.pop(context, noteDescription);
         },
@@ -106,28 +101,43 @@ class _TaskPageState extends State<TaskPage> {
       ),
       body: Column(
         children: [
-          quill.QuillToolbar.basic(
-            controller: controller,
-            multiRowsDisplay: false,
-            toolbarIconSize: 24,
-          ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: quill.QuillEditor(
-                controller: controller,
-                scrollController: ScrollController(),
-                scrollable: true,
-                focusNode: FocusNode(),
-                autoFocus: false,
-                readOnly: false,
-                placeholder: 'Add your note here.',
-                expands: false,
-                padding: EdgeInsets.zero,
-              ),
-            ),
-          )
+          getToolBar(controller),
+          getEditor(controller),
         ],
+      ),
+    );
+  }
+
+  void deleteNote() {
+    DatabaseHelper _dbHelper = DatabaseHelper();
+    _dbHelper.deleteNote(widget.note!);
+
+    Navigator.pop(context);
+  }
+
+  quill.QuillToolbar getToolBar(quill.QuillController controller) {
+    return quill.QuillToolbar.basic(
+      controller: controller,
+      multiRowsDisplay: false,
+      toolbarIconSize: 24,
+    );
+  }
+
+  Widget getEditor(quill.QuillController controller) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: quill.QuillEditor(
+          controller: controller,
+          scrollController: ScrollController(),
+          scrollable: true,
+          focusNode: FocusNode(),
+          autoFocus: false,
+          readOnly: false,
+          placeholder: 'Add your note here.',
+          expands: false,
+          padding: EdgeInsets.zero,
+        ),
       ),
     );
   }
