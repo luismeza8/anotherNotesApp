@@ -1,6 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:todo_app/models/task.dart';
+import 'package:todo_app/models/notes.dart';
 
 class DatabaseHelper {
   Future<Database> database() async {
@@ -27,6 +27,13 @@ class DatabaseHelper {
   Future<void> deleteNote(Notes note) async {
     Database _db = await database();
     await _db.rawDelete('DELETE FROM notes WHERE id = ${note.id}');
+  }
+
+  Future<void> updateNote(Notes note) async {
+    Database _db = await database();
+
+    await _db
+        .update('notes', note.toMap(), where: 'id = ?', whereArgs: [note.id]);
   }
 
   Future<List<Notes>> getNotes() async {

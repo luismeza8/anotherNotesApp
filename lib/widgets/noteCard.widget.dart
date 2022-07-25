@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
-import 'package:todo_app/models/task.dart';
+import 'package:todo_app/models/notes.dart';
 
 class TaskCard extends StatefulWidget {
   final Notes note;
@@ -25,10 +25,10 @@ class _TaskCardState extends State<TaskCard> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: ListTile(
         title: Text(
-          widget.note.title ?? 'Unnamed Note',
+          widget.note.title ?? '',
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        subtitle: Text(subtitle.substring(0, 20)),
+        subtitle: Text(subtitle),
       ),
     );
   }

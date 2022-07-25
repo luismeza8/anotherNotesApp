@@ -6,7 +6,7 @@ import 'package:todo_app/database_helper.dart';
 import 'package:todo_app/screens/note_page.screen.dart';
 import 'package:todo_app/widgets/noteCard.widget.dart';
 
-import '../models/task.dart';
+import '../models/notes.dart';
 
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({Key? key}) : super(key: key);
@@ -37,7 +37,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const TaskPage(),
+            builder: (context) => TaskPage(),
           ),
         ).then(
           (value) => setState(() {}),

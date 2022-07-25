@@ -2,15 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:todo_app/database_helper.dart';
-import 'package:todo_app/models/task.dart';
+import 'package:todo_app/models/notes.dart';
 
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 
 // ignore: must_be_immutable
 class TaskPage extends StatefulWidget {
-  final Notes? note;
+  late final Notes? note;
 
-  const TaskPage({Key? key, this.note}) : super(key: key);
+  TaskPage({Key? key, this.note}) : super(key: key);
 
   @override
   State<TaskPage> createState() => _TaskPageState();
@@ -43,8 +43,8 @@ class _TaskPageState extends State<TaskPage> {
 
     return Scaffold(
       appBar: AppBar(
-        leading:
-            IconButton(onPressed: () {}, icon: const Icon(Icons.arrow_back)),
+        // leading:
+        //     IconButton(onPressed: () {}, icon: const Icon(Icons.arrow_back)),
         actions: [
           PopupMenuButton(
             itemBuilder: (context) {
@@ -75,10 +75,10 @@ class _TaskPageState extends State<TaskPage> {
             border: InputBorder.none,
           ),
           controller: widget.note != null
-              ? TextEditingController(text: widget.note!.title ?? '')
+              ? TextEditingController(text: widget.note!.title)
               : TextEditingController(text: ''),
           onChanged: (value) async {
-            if (value.isNotEmpty) noteTitle = value;
+            if (value.isNotEmpty || value != '') noteTitle = value;
           },
           style: const TextStyle(
             fontSize: 26,
@@ -87,12 +87,20 @@ class _TaskPageState extends State<TaskPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
+        onPressed: () async {
           DatabaseHelper _dbHelper = DatabaseHelper();
+
           noteDescription = jsonEncode(controller!.document.toDelta().toJson());
-          Notes _newTask =
-              Notes(title: noteTitle, description: noteDescription!);
-          _dbHelper.insertNote(_newTask);
+
+          if (widget.note == null) {
+            Notes _newTask =
+                Notes(title: noteTitle, description: noteDescription!);
+            _dbHelper.insertNote(_newTask);
+          } else {
+            widget.note!.title = noteTitle ?? widget.note!.title;
+            widget.note!.description = noteDescription;
+            _dbHelper.updateNote(widget.note!);
+          }
 
           Navigator.pop(context, noteDescription);
         },
